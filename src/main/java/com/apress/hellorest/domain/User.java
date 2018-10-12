@@ -3,13 +3,19 @@ package com.apress.hellorest.domain;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Type;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.NonNullFields;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 @Entity
@@ -17,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class User {
 	
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="USER_ID")
 	private Long id;
 	
@@ -26,8 +32,8 @@ public class User {
 	private String username;
 	
 	@Column
-	@NotEmpty
-	@JsonIgnore
+	@NotNull
+	//@JsonIgnore  sur le get
 	private String password;
 	
 	@Column(name="FIRST_NAME")
@@ -40,8 +46,8 @@ public class User {
 	
 	@Column(name="ADMIN", columnDefinition="char(3)")
 	@Type(type="yes_no")
-	@NotEmpty
-	private boolean admin;
+	@NotNull
+	private Boolean admin;
 
 	
 	public String getUsername() {
@@ -52,6 +58,8 @@ public class User {
 		this.username = username;
 	}
 
+	@JsonIgnore
+	@JsonProperty(value="password")
 	public String getPassword() {
 		return password;
 	}
@@ -76,11 +84,12 @@ public class User {
 		this.lastname = lastname;
 	}
 
-	public boolean isAdmin() {
+	
+	public Boolean isAdmin() {
 		return admin;
 	}
 
-	public void setAdmin(boolean admin) {
+	public void setAdmin(Boolean admin) {
 		this.admin = admin;
 	}
 
